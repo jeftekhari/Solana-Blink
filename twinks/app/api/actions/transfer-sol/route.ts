@@ -1,7 +1,3 @@
-/**
- * Solana Actions Example
- */
-
 import {
     ActionPostResponse,
     createPostResponse,
@@ -19,7 +15,7 @@ import {
     Transaction,
     TransactionInstruction,
   } from "@solana/web3.js";
-  import { DEFAULT_SOL_ADDRESS, DEFAULT_SOL_AMOUNT } from "./const";
+  import { DEFAULT_MSG_SIGN, DEFAULT_SOL_ADDRESS, DEFAULT_SOL_AMOUNT } from "./const";
   
   // create the standard headers for this route (including CORS)
   const headers = createActionHeaders();
@@ -151,7 +147,7 @@ import {
       transaction.add(
         new TransactionInstruction({
           programId: new PublicKey(MEMO_PROGRAM_ID),
-          data: Buffer.from(`${message}`, "utf8"),
+          data: Buffer.from(`${DEFAULT_MSG_SIGN + message}`, "utf8"),
           keys: []
         }),
       );
