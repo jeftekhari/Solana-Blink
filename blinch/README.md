@@ -1,6 +1,16 @@
 # blinch
 Solana blink actions client implemented in Node.JS using Express and Bun
 
+
+
+This project was created using `bun init` in bun v1.0.26. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+
+To install dependencies:
+
+```bash
+bun install
+```
+
 This is setup to have a database (currently just in memory) of various different wallets and their blink configuration. To add your wallet open the `./src/constants.ts` file and add the following
 
 ```
@@ -11,16 +21,12 @@ creators.set("<wallet-address-here>", {
 } as Creator);
 ```
 
-To install dependencies:
-
-```bash
-bun install
-```
-
 To run:
 
 ```bash
 bun dev
 ```
 
-This project was created using `bun init` in bun v1.0.26. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+Navigate to http://localhost:3000/donate/<wallet>
+
+Test how your blink would look at the Dialect developer portal https://dial.to/developer
