@@ -45,7 +45,7 @@
         sendRequest(ws, walletAddress);
     };
 
-    ws.onmessage = async (evt) => {
+    ws.onmessage = (evt) => {
         const messageStr = evt.data.toString('utf8');
         try {
             const messageObj = JSON.parse(messageStr);
@@ -57,23 +57,28 @@
             //get most recent N transactions
             //search transactions for memos
             //batch tx's together in memos
-            const response = await fetch(`https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}`, {
+            fetch(`https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}`, {
                 method: 'GET',
                 headers: {},
-            });
-            const data = await response.json();
-            let memoData = "";
-            data.map((tx) => {
-                 return tx.instructions.map((ix) => {
-                    if (ix.programId === "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" ) {
-                        memoData += `${ix.data}<br>`;
-                        return ix.data;
-                    } 
+            }).then(response => response.json())
+            .then((data) => {
+                console.log('Data: ',data);
+                let memoData = "";
+                data.map((tx) => {
+                     return tx.instructions.map((ix) => {
+                        if (ix.programId === "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" ) {
+                            var bytes = bs58.default.decode(ix.data);
+                            let enc = new TextDecoder("utf-8");
+                            enc.decode(bytes)
+
+                            memoData += `${enc.decode(bytes)}<br>`;
+                            document.getElementById("txData").innerHTML = `tx result received: ${memoData}`;
+                            return ix.data;
+                        } 
+                    })
                 })
-            })
-            document.getElementById("txData").innerHTML = `tx result received: ${memoData}`;
-
-
+                document.getElementById("txData").innerHTML = `tx result received: ${memoData}`;
+            }); 
         } catch (e) {
             console.error('Failed to parse JSON:', e);
         }
