@@ -2,24 +2,19 @@
 
 (function () {
     // Function to send a request to the WebSocket server
-    function sendRequest(ws) {
+    function sendRequest(ws, walletAddress) {
         const request = {
-            jsonrpc: "2.0",
-            id: 420,
-            method: "transactionSubscribe",
-            params: [
-                {
-                    accountInclude: ["675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"]
-                },
-                {
-                    commitment: "processed",
-                    encoding: "jsonParsed",
-                    transactionDetails: "full",
-                    showRewards: true,
-                    maxSupportedTransactionVersion: 0
-                }
+            "jsonrpc": "2.0",
+            "id": 420,
+            "method": "accountSubscribe",
+             "params": [
+              walletAddress,
+              {
+                "encoding": "jsonParsed",
+                "commitment": "finalized"
+              }
             ]
-        };
+          }
         ws.send(JSON.stringify(request));
     }
 
@@ -40,23 +35,45 @@
     var params = getQuery ? getQuery.split('&') : [];
     console.log(params);
     const apiKey = "";
+    const walletAddress = params[0].split('=')[1];
     if (!apiKey) throw new Error("NO API KEY FOUND");
     const rpc = `wss://mainnet.helius-rpc.com/?api-key=${apiKey}`;
     const ws = new WebSocket(rpc);
 
     ws.onopen = () => {
         console.log("Websocket open");
-        sendRequest(ws);
+        sendRequest(ws, walletAddress);
     };
 
-    ws.onmessage = (evt) => {
+    ws.onmessage = async (evt) => {
         const messageStr = evt.data.toString('utf8');
         try {
             const messageObj = JSON.parse(messageStr);
             console.log(messageStr);
             document.getElementById("text").innerHTML = `result received: ${messageStr}`;
             console.log('Received:', messageObj);
-            highlighter()
+
+            //http request to wallet
+            //get most recent N transactions
+            //search transactions for memos
+            //batch tx's together in memos
+            const response = await fetch(`https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}`, {
+                method: 'GET',
+                headers: {},
+            });
+            const data = await response.json();
+            let memoData = "";
+            data.map((tx) => {
+                 return tx.instructions.map((ix) => {
+                    if (ix.programId === "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" ) {
+                        memoData += `${ix.data}<br>`;
+                        return ix.data;
+                    } 
+                })
+            })
+            document.getElementById("txData").innerHTML = `tx result received: ${memoData}`;
+
+
         } catch (e) {
             console.error('Failed to parse JSON:', e);
         }
