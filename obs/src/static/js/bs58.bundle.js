@@ -18,6 +18,7 @@ function base (ALPHABET) {
     if (BASE_MAP[xc] !== 255) { throw new TypeError(x + ' is ambiguous') }
     BASE_MAP[xc] = i
   }
+  var ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
   const BASE = ALPHABET.length
   const LEADER = ALPHABET.charAt(0)
   const FACTOR = Math.log(BASE) / Math.log(256) // log(BASE) / log(256), rounded up
