@@ -39,6 +39,8 @@
     if (!apiKey) throw new Error("NO API KEY FOUND");
     const rpc = `wss://mainnet.helius-rpc.com/?api-key=${apiKey}`;
     const ws = new WebSocket(rpc);
+    const enc = new TextDecoder("utf-8");
+    let startup = false;
 
     ws.onopen = () => {
         console.log("Websocket open");
@@ -57,28 +59,24 @@
             //get most recent N transactions
             //search transactions for memos
             //batch tx's together in memos
+            let memoData = "";
             fetch(`https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}`, {
                 method: 'GET',
                 headers: {},
             }).then(response => response.json())
             .then((data) => {
-                console.log('Data: ',data);
-                let memoData = "";
-                data.map((tx) => {
-                     return tx.instructions.map((ix) => {
-                        if (ix.programId === "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" ) {
+                return data.map((tx, i) => {
+                    tx.instructions.map((ix) => {
+                        if (ix.programId === "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" && tx.type === "TRANSFER") {
                             var bytes = bs58.default.decode(ix.data);
-                            let enc = new TextDecoder("utf-8");
-                            enc.decode(bytes)
-
-                            memoData += `${enc.decode(bytes)}<br>`;
-                            document.getElementById("txData").innerHTML = `tx result received: ${memoData}`;
+                            // console.log(enc.decode(bytes))
+                            memoData += `<div>${startup && i === 0 ? "NEW":""} ${enc.decode(bytes).replace ("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}<br></div>`;
+                            document.getElementById("txData").innerHTML = `<h3>tx result received:</h3>${memoData}`;
                             return ix.data;
-                        } 
+                        }
                     })
                 })
-                document.getElementById("txData").innerHTML = `tx result received: ${memoData}`;
-            }); 
+            }).then(() => startup = true);
         } catch (e) {
             console.error('Failed to parse JSON:', e);
         }
@@ -90,5 +88,6 @@
     
     ws.onclose = () => {
         console.log('WebSocket is closed');
+        sendRequest(ws, walletAddress);
     };
 })();
