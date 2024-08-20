@@ -29,6 +29,26 @@
         }, 30000); // Ping every 30 seconds
     }
 
+    const display = document.getElementById('display');
+    var currentIndex = 0
+
+    function displayNextItem(data) {
+
+        if (currentIndex < data.length) {
+            display.textContent = `${data[currentIndex].amount} Donated! \n ${data[currentIndex].memo}`;
+
+            // Move to the next item after 4 seconds (4000 milliseconds)
+            setTimeout(() => {
+                display.textContent = '';
+                
+                currentIndex++;
+
+                // Display the next item
+                displayNextItem(data);
+            }, 4000);
+        }
+    }
+
     var url = window.location.search;
     var getQuery = url.split('?')[1];
     console.log(getQuery);
@@ -49,6 +69,8 @@
 
     ws.onmessage = (evt) => {
         const messageStr = evt.data.toString('utf8');
+
+        let displayData = [];
         try {
             const messageObj = JSON.parse(messageStr);
             console.log(messageStr);
@@ -65,6 +87,7 @@
                 headers: {},
             }).then(response => response.json())
             .then((data) => {
+                console.log(data);
                 return data.map((tx, i) => {
                     tx.instructions.map((ix) => {
                         if (ix.programId === "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" && tx.type === "TRANSFER") {
@@ -72,11 +95,20 @@
                             // console.log(enc.decode(bytes))
                             memoData += `<div>${startup && i === 0 ? "NEW":""} ${enc.decode(bytes).replace ("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}<br></div>`;
                             document.getElementById("txData").innerHTML = `<h3>tx result received:</h3>${memoData}`;
+                            displayData.push({amount: tx.description.split(" ")[2], memo: enc.decode(bytes).replace ("twinkMemo:",""), timestamp: tx.timestamp});
+                            // display.textContent = `${enc.decode(bytes).replace ("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}`;
+                            
                             return ix.data;
                         }
                     })
                 })
-            }).then(() => startup = true);
+            }).then(() => {
+                startup = true
+                console.log(displayData);
+
+                displayNextItem(displayData);
+            });
+
         } catch (e) {
             console.error('Failed to parse JSON:', e);
         }

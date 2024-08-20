@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@solana/actions": "^1.6.1",
+    "bun": "^1.1.24",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "prettier": "^3.3.3",
