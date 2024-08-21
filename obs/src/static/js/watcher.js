@@ -30,16 +30,20 @@
     }
 
     const display = document.getElementById('display');
+    const memoDisplay = document.getElementById("memo");
     var currentIndex = 0
+    var mostRecentTimeStamp = 0;
 
     function displayNextItem(data) {
 
         if (currentIndex < data.length) {
-            display.textContent = `${data[currentIndex].amount} Donated! \n ${data[currentIndex].memo}`;
+            display.textContent = `${data[currentIndex].amount} SOL Donated`;
+            memoDisplay.textContent = data[currentIndex].memo;
 
             // Move to the next item after 4 seconds (4000 milliseconds)
             setTimeout(() => {
                 display.textContent = '';
+                memo.textContent = '';
                 
                 currentIndex++;
 
@@ -88,6 +92,8 @@
             }).then(response => response.json())
             .then((data) => {
                 console.log(data);
+                //something something track timestamp and find values greater to filter the list to display 
+                mostRecentTimeStamp = data[0].timestamp
                 return data.map((tx, i) => {
                     tx.instructions.map((ix) => {
                         if (ix.programId === "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" && tx.type === "TRANSFER") {
@@ -106,6 +112,7 @@
                 startup = true
                 console.log(displayData);
 
+                currentIndex = 0;
                 displayNextItem(displayData);
             });
 

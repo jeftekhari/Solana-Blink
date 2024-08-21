@@ -36,3 +36,8 @@
     color: #07c607;
     text-shadow: 1px 2px #242020;
   }
+
+  #memo {
+    font-family: sans-serif;
+    margin-top: 5px;
+  }
