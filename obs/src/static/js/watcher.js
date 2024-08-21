@@ -33,7 +33,7 @@
     const memoDisplay = document.getElementById("memo");
     const gif = document.getElementById("gif");
     var currentIndex = 0
-    var mostRecentTimeStamp = 0;
+    var mostRecentTimeStamp = Math.floor(Date.now() / 1000) //UNIX time UTC in SECONDS
 
     function displayNextItem(data) {
 
@@ -91,14 +91,14 @@
             //search transactions for memos
             //batch tx's together in memos
             let memoData = "";
-            fetch(`https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}`, {
+            fetch(`https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}&limit=30`, {
                 method: 'GET',
                 headers: {},
             }).then(response => response.json())
             .then((data) => {
                 console.log(data);
+                console.log(`most recent timestamp ${mostRecentTimeStamp}`);
                 //something something track timestamp and find values greater to filter the list to display 
-                mostRecentTimeStamp = data[0].timestamp
                 return data.map((tx, i) => {
                     tx.instructions.map((ix) => {
                         if (ix.programId === "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" && tx.type === "TRANSFER") {
@@ -106,8 +106,10 @@
                             // console.log(enc.decode(bytes))
                             memoData += `<div>${startup && i === 0 ? "NEW":""} ${enc.decode(bytes).replace ("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}<br></div>`;
                             document.getElementById("txData").innerHTML = `<h3>tx result received:</h3>${memoData}`;
-                            displayData.push({amount: tx.description.split(" ")[2], memo: enc.decode(bytes).replace ("twinkMemo:",""), timestamp: tx.timestamp});
-                            // display.textContent = `${enc.decode(bytes).replace ("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}`;
+                            if(mostRecentTimeStamp <= tx.timestamp) { 
+                                displayData.push({amount: tx.description.split(" ")[2], memo: enc.decode(bytes).replace ("twinkMemo:",""), timestamp: tx.timestamp});
+                            }   
+                            //display.textContent = `${enc.decode(bytes).replace ("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}`;
                             
                             return ix.data;
                         }
@@ -116,7 +118,9 @@
             }).then(() => {
                 startup = true
                 console.log(displayData);
-
+                if(displayData.length !== 0) {
+                    mostRecentTimeStamp = displayData[0].timestamp;
+                }
                 currentIndex = 0;
                 displayNextItem(displayData);
             });
