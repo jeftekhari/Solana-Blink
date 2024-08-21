@@ -31,6 +31,7 @@
 
     const display = document.getElementById('display');
     const memoDisplay = document.getElementById("memo");
+    const gif = document.getElementById("gif");
     var currentIndex = 0
     var mostRecentTimeStamp = 0;
 
@@ -39,16 +40,20 @@
         if (currentIndex < data.length) {
             display.textContent = `${data[currentIndex].amount} SOL Donated`;
             memoDisplay.textContent = data[currentIndex].memo;
+            gif.style.display = "block";
 
             // Move to the next item after 4 seconds (4000 milliseconds)
             setTimeout(() => {
                 display.textContent = '';
                 memo.textContent = '';
+                gif.style.display = "none";
                 
                 currentIndex++;
 
                 // Display the next item
-                displayNextItem(data);
+                //setInterval( () => {
+                    displayNextItem(data);
+                //}, 1000);
             }, 4000);
         }
     }
