@@ -19,9 +19,3 @@ creators.set("CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa", {
   icon: "ManBoy.png",
   description: "Tipping Manboy",
 } as Creator);
-
-creators.set("5pfePMxmcjneFrfhqdArRNQtbMqbFWofPegSbcwvT7km", {
-  name: "seslly",
-  icon: "seslly.png",
-  description: "GIVE ME YOUR MONEY"
-} as Creator)

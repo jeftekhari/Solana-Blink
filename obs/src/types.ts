@@ -1,5 +1,5 @@
-export type Creator {
-    name: string;
-    icon: string;
-    description: string;
-}
+export type Creator = {
+  name: string;
+  icon: string;
+  description: string;
+};

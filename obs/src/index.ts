@@ -20,6 +20,7 @@ import {
 } from "@solana/web3.js";
 import { DEFAULT_MSG_SIGN, getCreator } from "./constants";
 import { routeLogger } from "./middleware";
+import { creatorPage } from "./templates/obsCreator";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -36,7 +37,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/static", express.static(path.join(__dirname, ".", "static")));
-app.get("/", (_, res) => res.send("Working!"));
+app.get("/", (_, res) => res.redirect("/static/"));
 // required for CORS
 app.options("/actions.json", (_, res) => {
   res.set(headers);
@@ -117,7 +118,7 @@ app.post("/donate/:wallet", async (req, res) => {
   const { wallet } = req.params;
   let { amount, message } = req.query;
   const { account } = req.body;
-  
+
   // validate params
   if (!amount) return res.status(401).send("Missing params");
   if (parseFloat(`${amount}`) <= 0)
@@ -205,4 +206,12 @@ app.post("/donate/:wallet", async (req, res) => {
   }
 });
 
-app.listen(port, () => console.warn(`Successful start up at :${port} open up localhost:${port}/static into OBS`));
+app.get("/obs/", (req, res) => {
+  res.send(`${creatorPage(req.query.walletAddress as string)}`);
+});
+
+app.listen(port, () =>
+  console.warn(
+    `Successful start up at :${port} open up localhost:${port}/static into OBS`,
+  ),
+);
