@@ -3,7 +3,7 @@ export const creatorPage = (creator: string) => {
     <html>
       <link type="text/css" rel="stylesheet" href="/static/css/default.css" />
       <body>
-        <h1>Blinch OBS Source</h1>
+        {/* <h1>Blinch OBS Source</h1> */}
 
         <div>
           <h2 id="display"></h2>
@@ -20,14 +20,13 @@ export const creatorPage = (creator: string) => {
             ></iframe>
             <p>
               <a href="https://giphy.com/gifs/excited-celebrate-yay-kIvLVjAulfNTcxUPXU">
-                via GIPHY
               </a>
             </p>
           </div>
         </div>
 
-        <p id="text">Loading Account Watcher</p>
-        <p id="txData">Loading Memos</p>
+        {/* <p id="text">Loading Account Watcher</p>
+        <p id="txData">Loading Memos</p> */}
       </body>
 
       <script src="/static/js/bs58.bundle.js"></script>
