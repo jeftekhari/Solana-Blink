@@ -52,7 +52,7 @@
         //setInterval( () => {
         displayNextItem(data);
         //}, 1000);
-      }, 4000);
+      }, 6000);
     }
   }
 
@@ -61,7 +61,7 @@
   console.log(getQuery);
   var params = getQuery ? getQuery.split("&") : [];
   console.log(params);
-  const apiKey = "";
+  const apiKey = "bc25d0b5-2b75-4ac3-81b9-a2f37ff51660";
   const walletAddress = params[0].split("=")[1];
   if (!apiKey) throw new Error("NO API KEY FOUND");
   const rpc = `wss://mainnet.helius-rpc.com/?api-key=${apiKey}`;
@@ -82,7 +82,7 @@
       const messageObj = JSON.parse(messageStr);
       console.log(messageStr);
       document.getElementById("text").innerHTML =
-        `<h4>result received: ${messageStr}</h4>`;
+        `<h4>result received: loading transactions..</h4>`;
       console.log("Received:", messageObj);
 
       //http request to wallet
@@ -91,10 +91,10 @@
       //batch tx's together in memos
       let memoData = "";
       fetch(
-        `https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}&limit=30`,
+        `https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}&limit=15`,
         {
-          method: "GET",
-          headers: {},
+          method: "GET"
+        //   headers: {},
         },
       )
         .then((response) => response.json())
