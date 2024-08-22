@@ -32,7 +32,27 @@
   const memoDisplay = document.getElementById("memo");
   const gif = document.getElementById("gif");
   var currentIndex = 0;
-  var mostRecentTimeStamp = Math.floor(Date.now() / 1000); //UNIX time UTC in SECONDS
+  var mostRecentTimeStamp = Math.floor(Date.now() / 1000); //UNIX time UTC in SECONDS\
+  let displayData = [];
+
+  function showDisplayData() {
+    console.log("show display data: ", displayData);
+    gif.style.display = "none";
+    display.textContent = "";
+    memoDisplay.textContent = "";
+    for (const data of displayData) {
+      if (data.isDisplayed === false) {
+        display.textContent = `${data.amount} SOL Donated`;
+        memoDisplay.textContent = data.memo;
+        gif.style.display = "block";
+        data.isDisplayed = true;
+        break;
+      }
+    }
+    setTimeout(showDisplayData, 10000);
+  }
+
+  //   setInterval(showDisplayData, 5000);
 
   function displayNextItem(data) {
     if (currentIndex < data.length) {
@@ -56,11 +76,20 @@
     }
   }
 
+  function checkSignature(tx) {
+    for (const data of displayData) {
+      if (data.signature === tx.signature) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   var url = window.location.search;
   var getQuery = url.split("?")[1];
-  console.log(getQuery);
+  //   console.log(getQuery);
   var params = getQuery ? getQuery.split("&") : [];
-  console.log(params);
+  //   console.log(params);
   const apiKey = "bc25d0b5-2b75-4ac3-81b9-a2f37ff51660";
   const walletAddress = params[0].split("=")[1];
   if (!apiKey) throw new Error("NO API KEY FOUND");
@@ -77,10 +106,9 @@
   ws.onmessage = (evt) => {
     const messageStr = evt.data.toString("utf8");
 
-    let displayData = [];
     try {
       const messageObj = JSON.parse(messageStr);
-      console.log(messageStr);
+      //   console.log(messageStr);
       document.getElementById("text").innerHTML =
         `<h4>result received: loading transactions..</h4>`;
       console.log("Received:", messageObj);
@@ -93,13 +121,13 @@
       fetch(
         `https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}&limit=15`,
         {
-          method: "GET"
-        //   headers: {},
+          method: "GET",
+          //   headers: {},
         },
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          console.log("tx data: ", data);
           console.log(`most recent timestamp ${mostRecentTimeStamp}`);
           //something something track timestamp and find values greater to filter the list to display
           return data.map((tx, i) => {
@@ -114,28 +142,26 @@
                 memoData += `<div>${startup && i === 0 ? "NEW" : ""} ${enc.decode(bytes).replace("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}<br></div>`;
                 document.getElementById("txData").innerHTML =
                   `<h3>tx result received:</h3>${memoData}`;
-                if (mostRecentTimeStamp <= tx.timestamp) {
+                if (checkSignature(tx)) {
                   displayData.push({
+                    signature: tx.signature,
                     amount: tx.description.split(" ")[2],
                     memo: enc.decode(bytes).replace("twinkMemo:", ""),
                     timestamp: tx.timestamp,
+                    isDisplayed: !startup,
                   });
                 }
-                //display.textContent = `${enc.decode(bytes).replace ("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}`;
-
                 return ix.data;
               }
             });
           });
         })
         .then(() => {
-          startup = true;
-          console.log(displayData);
-          if (displayData.length !== 0) {
-            mostRecentTimeStamp = displayData[0].timestamp;
+          if (!startup) {
+            showDisplayData();
           }
-          currentIndex = 0;
-          displayNextItem(displayData);
+          startup = true;
+          console.log("final then display data: ", displayData);
         });
     } catch (e) {
       console.error("Failed to parse JSON:", e);
