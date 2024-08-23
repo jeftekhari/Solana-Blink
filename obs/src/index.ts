@@ -26,7 +26,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const origin = process.env.ORIGIN || `http://localhost:${port}`;
 // create the standard headers for this route (including CORS)
-const headers = Object.values(createActionHeaders());
+const headers = createActionHeaders();
 console.log(headers)
 app.use(routeLogger);
 // app.use(
