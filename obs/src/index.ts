@@ -72,7 +72,7 @@ app.get("/donate/:wallet", (req, res) => {
   const donateUrl = `/donate/${wallet}`;
   console.error(req.params);
   const creator = getCreator(wallet);
-  if (!creator) return res.status(400).send("Wallet not in database");
+  if (!creator) return res.status(200).send("Wallet not in database");
   const payload: ActionGetResponse = {
     title: "Tip Your Favorite Streamer!",
     icon: `${origin}/static/img/${creator.icon}`,
