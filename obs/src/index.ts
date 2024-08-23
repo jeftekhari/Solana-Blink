@@ -61,7 +61,7 @@ app.get("/actions.json", (_, res) => {
   res.set(headers);
   res.send(payload);
 });
-// // required for CORS
+// required for CORS
 app.options("/donate/:wallet", (_, res) => {
   console.error(`${headers}`);
   res.set(headers);
@@ -145,10 +145,10 @@ app.post("/donate/:wallet", async (req, res) => {
 
     // re-enable this when changing from lamports to pure sol
 
-    if (amount * LAMPORTS_PER_SOL < minimumBalance) {
-      throw `account may not be rent exempt: ${toPubkey.toBase58()}`;
-    }
-
+    // if (amount * LAMPORTS_PER_SOL < minimumBalance) {
+    //   throw `account may not be rent exempt: ${toPubkey.toBase58()}`;
+    // }
+    console.log(`${amount}`);
     // create an instruction to transfer native SOL from one wallet to another
     const transferSolInstruction = SystemProgram.transfer({
       fromPubkey: sender,
