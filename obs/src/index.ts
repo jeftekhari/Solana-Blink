@@ -99,6 +99,7 @@ app.get("/donate/:wallet", (req, res) => {
             {
               name: "amount", // parameter name in the `href` above
               label: "Enter the amount of SOL to tip", // placeholder of the text input
+              type: "number",
               required: true,
             },
             {
