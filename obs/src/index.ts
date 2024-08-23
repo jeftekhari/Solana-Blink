@@ -27,11 +27,12 @@ const port = process.env.PORT || 3000;
 const origin = process.env.ORIGIN || `http://localhost:${port}`;
 // create the standard headers for this route (including CORS)
 const headers = Object.values(createActionHeaders());
-
+console.log(headers)
 app.use(routeLogger);
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "*", // update to fqdn in prod
+    origin: "*",
+    methods: ["GET","POST","PUT","OPTIONS"],
   }),
 );
 app.use(express.json());
