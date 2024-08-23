@@ -27,6 +27,9 @@ const port = process.env.PORT || 3000;
 const origin = process.env.ORIGIN || `http://localhost:${port}`;
 // create the standard headers for this route (including CORS)
 const headers = createActionHeaders();
+const conn = new Connection(
+  process.env.SOLANA_RPC! || clusterApiUrl("mainnet-beta"),
+);
 console.log(headers)
 app.use(routeLogger);
 // app.use(
@@ -141,9 +144,6 @@ app.post("/donate/:wallet", async (req, res) => {
   }
 
   try {
-    const conn = new Connection(
-      process.env.SOLANA_RPC! || clusterApiUrl("mainnet-beta"),
-    );
     // ensure the receiving account will be rent exempt
     const minimumBalance = await conn.getMinimumBalanceForRentExemption(
       0, // note: simple accounts that just store native SOL have `0` bytes of data
