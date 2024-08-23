@@ -31,7 +31,7 @@ const headers = Object.values(createActionHeaders());
 app.use(routeLogger);
 app.use(
   cors({
-    origin: process.env.ORIGIN || "*", // update to fqdn in prod
+    origin: process.env.CORS_ORIGIN || "*", // update to fqdn in prod
   }),
 );
 app.use(express.json());
