@@ -121,7 +121,8 @@ app.post("/donate/:wallet", async (req, res) => {
 
   // validate params
   if (!amount) return res.status(401).send("Missing params");
-  if (parseFloat(`${amount}`) <= 0)
+  const parsedAmount = parseFloat(`${amount}`);
+  if (!parsedAmount || parsedAmount <= 0)
     return res.status(400).send("Amount is too small");
   if (!message) console.warn("Empty message, should be fine?");
 
@@ -148,12 +149,12 @@ app.post("/donate/:wallet", async (req, res) => {
     // if (amount * LAMPORTS_PER_SOL < minimumBalance) {
     //   throw `account may not be rent exempt: ${toPubkey.toBase58()}`;
     // }
-    console.log(`${amount}`);
+    console.log(`${parsedAmount}`);
     // create an instruction to transfer native SOL from one wallet to another
     const transferSolInstruction = SystemProgram.transfer({
       fromPubkey: sender,
       toPubkey: receiver,
-      lamports: parseFloat(`${amount}`) * LAMPORTS_PER_SOL,
+      lamports: parsedAmount * LAMPORTS_PER_SOL,
     });
 
     // console.log(transferSolInstruction);
