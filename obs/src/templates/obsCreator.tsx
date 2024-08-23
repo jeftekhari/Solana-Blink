@@ -19,8 +19,7 @@ export const creatorPage = (creator: string) => {
               allowFullScreen
             ></iframe>
             <p>
-              <a href="https://giphy.com/gifs/excited-celebrate-yay-kIvLVjAulfNTcxUPXU">
-              </a>
+              <a href="https://giphy.com/gifs/excited-celebrate-yay-kIvLVjAulfNTcxUPXU"></a>
             </p>
           </div>
         </div>

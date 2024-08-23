@@ -72,7 +72,7 @@ app.get("/donate/:wallet", (req, res) => {
   const donateUrl = `/donate/${wallet}`;
   console.error(req.params);
   const creator = getCreator(wallet);
-  if (!creator) return res.status(200).send("Wallet not in database");
+  if (!creator) return res.status(400).send("Wallet not in database");
   const payload: ActionGetResponse = {
     title: "Tip Your Favorite Streamer!",
     icon: `${origin}/static/img/${creator.icon}`,
@@ -122,8 +122,10 @@ app.post("/donate/:wallet", async (req, res) => {
   // validate params
   if (!amount) return res.status(401).send("Missing params");
   const parsedAmount = parseFloat(`${amount}`);
-  if (!parsedAmount || parsedAmount <= 0)
+  if (!parsedAmount || parsedAmount <= 0) {
+    console.error(`invalid amount ${amount}`);
     return res.status(400).send("Amount is too small");
+  }
   if (!message) console.warn("Empty message, should be fine?");
 
   let receiver: PublicKey;
@@ -197,7 +199,7 @@ app.post("/donate/:wallet", async (req, res) => {
       // signers: [],
     });
 
-    console.debug(payload);
+    // console.debug(payload);
 
     res.set(headers);
     return res.send(payload);

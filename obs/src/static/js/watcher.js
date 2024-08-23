@@ -85,8 +85,8 @@
     try {
       const messageObj = JSON.parse(messageStr);
       //   console.log(messageStr);
-    //   document.getElementById("text").innerHTML =
-    //     `<h4>result received: loading transactions..</h4>`;
+      //   document.getElementById("text").innerHTML =
+      //     `<h4>result received: loading transactions..</h4>`;
       console.log("Received:", messageObj);
 
       let memoData = "";
@@ -101,7 +101,7 @@
         .then((data) => {
           console.log("tx data: ", data);
           console.log(`most recent timestamp ${mostRecentTimeStamp}`);
-          
+
           return data.map((tx, i) => {
             tx.instructions.map((ix) => {
               if (
@@ -113,7 +113,7 @@
                 // console.log(enc.decode(bytes))
                 memoData += `<div>${startup && i === 0 ? "NEW" : ""} ${enc.decode(bytes).replace("twinkMemo:", `${tx.description.split(" ")[2]} SOL received:`)}<br></div>`;
                 // document.getElementById("txData").innerHTML =
-                  `<h3>tx result received:</h3>${memoData}`;
+                `<h3>tx result received:</h3>${memoData}`;
                 if (checkSignature(tx)) {
                   displayData.push({
                     signature: tx.signature,

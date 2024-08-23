@@ -5,6 +5,8 @@ export const routeLogger = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(`${req.method} ${req.url}`);
+  console.log(
+    `${req.method} ${req.url} ${req.query || ""} ${req.params || ""}`,
+  );
   next();
 };
