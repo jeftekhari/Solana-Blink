@@ -145,9 +145,9 @@ app.post("/donate/:wallet", async (req, res) => {
 
     // re-enable this when changing from lamports to pure sol
 
-    // if (amount * LAMPORTS_PER_SOL < minimumBalance) {
-    //   throw `account may not be rent exempt: ${toPubkey.toBase58()}`;
-    // }
+    if (amount * LAMPORTS_PER_SOL < minimumBalance) {
+      throw `account may not be rent exempt: ${toPubkey.toBase58()}`;
+    }
 
     // create an instruction to transfer native SOL from one wallet to another
     const transferSolInstruction = SystemProgram.transfer({
@@ -156,7 +156,7 @@ app.post("/donate/:wallet", async (req, res) => {
       lamports: parseFloat(`${amount}`) * LAMPORTS_PER_SOL,
     });
 
-    console.log(transferSolInstruction);
+    // console.log(transferSolInstruction);
 
     // get the latest blockhash amd block height
     const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash();
@@ -176,7 +176,7 @@ app.post("/donate/:wallet", async (req, res) => {
       }),
     );
 
-    console.log(transaction);
+    // console.log(transaction);
     // versioned transactions are also supported
     // const transaction = new VersionedTransaction(
     //   new TransactionMessage({
