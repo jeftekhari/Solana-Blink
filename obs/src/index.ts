@@ -29,12 +29,13 @@ const origin = process.env.ORIGIN || `http://localhost:${port}`;
 const headers = Object.values(createActionHeaders());
 console.log(headers)
 app.use(routeLogger);
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET","POST","PUT","OPTIONS"],
-  }),
-);
+// app.use(
+//   cors({
+//     origin: "*",
+//     methods: ["GET","POST","PUT","OPTIONS"],
+//     allowedHeaders: headers,
+//   }),
+// );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/static", express.static(path.join(__dirname, ".", "static")));
