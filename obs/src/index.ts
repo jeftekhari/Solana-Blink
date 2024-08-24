@@ -117,7 +117,7 @@ app.post("/donate/:wallet", async (req, res) => {
 
   // validate params
   if (!amount || !message) return res.status(400).send({error:"Amount and Message required"});
-  let parsedAmount = parseFloat(`${amount}`) || amount === '{amount}' ? 0.001 : NaN;
+  const parsedAmount = amount === '{amount}' ? 0.001 : parseFloat(`${amount}`);
   if (!parsedAmount || parsedAmount <= 0) {
     console.error(`invalid amount ${amount}`);
     return res.status(400).send("Amount is too small");
