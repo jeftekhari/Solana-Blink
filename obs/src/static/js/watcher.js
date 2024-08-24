@@ -56,6 +56,7 @@
         gif.style.display = "block";
         playAudio();
         data.isDisplayed = true;
+        setTimeout(()=>console.log("donation!"), 4000)
         break;
       }
     }
