@@ -32,6 +32,7 @@
   const memoDisplay = document.getElementById("memo");
   const gif = document.getElementById("gif");
   const audio = document.getElementById("pingAudio")
+  const obsNotification = document.getElementById("obsNotification");
   var currentIndex = 0;
   var mostRecentTimeStamp = Math.floor(Date.now() / 1000); //UNIX time UTC in SECONDS\
   let displayData = [];
@@ -51,6 +52,7 @@
     // memoDisplay.textContent = "";
     for (const data of displayData) {
       if (data.isDisplayed === false) {
+        obsNotification.style.display = block;
         display.textContent = `${data.amount} SOL Donated`;
         memoDisplay.textContent = data.memo;
         gif.style.display = "block";
