@@ -68,7 +68,6 @@ app.get("/actions.json", (_, res) => {
 });
 // required for CORS
 app.options("/donate/:wallet", (_, res) => {
-  console.error(`${headers}`);
   res.set(headers);
   res.send();
 });
@@ -99,12 +98,13 @@ app.get("/donate/:wallet", (req, res) => {
         },
         {
           label: `Tip ${creator.name} with SOL!`, // button text
-          href: `${donateUrl}?amount={amount}&message={message}`, // this href will have a text input
+          href: `${donateUrl}`, // this href will have a text input
           parameters: [
             {
               name: "amount", // parameter name in the `href` above
               label: "Enter the amount of SOL to tip", // placeholder of the text input
               type: "number",
+              min: 0.001,
               required: true,
             },
             {
