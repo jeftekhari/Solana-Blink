@@ -52,7 +52,7 @@
     // memoDisplay.textContent = "";
     for (const data of displayData) {
       if (data.isDisplayed === false) {
-        obsNotification.style.display = block;
+        obsNotification.style.display = "block";
         display.textContent = `${data.amount} SOL Donated`;
         memoDisplay.textContent = data.memo;
         gif.style.display = "block";
