@@ -72,6 +72,7 @@ app.options("/donate/:wallet", (_, res) => {
   res.send();
 });
 app.get("/donate/:wallet", (req, res) => {
+  res.set(headers);
   const { wallet } = req.params;
   const donateUrl = `/donate/${wallet}`;
   console.error(req.params);
@@ -118,22 +119,21 @@ app.get("/donate/:wallet", (req, res) => {
       ],
     },
   };
-  res.set(headers);
   res.send(payload);
 });
 app.post("/donate/:wallet", async (req, res) => {
+  res.set(headers);
   const { wallet } = req.params;
   let { amount, message } = req.query;
   const { account } = req.body;
 
   // validate params
-  if (!amount) return res.status(401).send("Missing params");
+  if (!amount || !message) return res.status(401).send("Missing params");
   const parsedAmount = parseFloat(`${amount}`);
   if (!parsedAmount || parsedAmount <= 0) {
     console.error(`invalid amount ${amount}`);
     return res.status(400).send("Amount is too small");
   }
-  if (!message) console.warn("Empty message, should be fine?");
 
   let receiver: PublicKey;
   let sender: PublicKey;
@@ -205,7 +205,6 @@ app.post("/donate/:wallet", async (req, res) => {
 
     // console.debug(payload);
 
-    res.set(headers);
     return res.send(payload);
   } catch (e) {
     console.error(e);
