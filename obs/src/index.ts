@@ -87,7 +87,7 @@ app.get("/donate/:wallet", (req, res) => {
       actions: [
         {
           label: `Tip ${creator.name} with SOL!`, // button text
-          href: `${donateUrl}`, // this href will have a text input
+          href: `${donateUrl}?amount={amount}message={message}`, // this href will have a text input
           parameters: [
             {
               name: "amount", // parameter name in the `href` above
@@ -116,7 +116,7 @@ app.post("/donate/:wallet", async (req, res) => {
   const { account } = req.body;
 
   // validate params
-  if (!amount || !message) return res.status(400).send("Missing params");
+  if (!amount || !message) return res.status(400).send("Amount and Message required");
   const parsedAmount = parseFloat(`${amount}`);
   if (!parsedAmount || parsedAmount <= 0) {
     console.error(`invalid amount ${amount}`);
