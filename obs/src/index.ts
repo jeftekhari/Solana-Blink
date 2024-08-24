@@ -99,7 +99,7 @@ app.get("/donate/:wallet", (req, res) => {
         },
         {
           label: `Tip ${creator.name} with SOL!`, // button text
-          href: `${donateUrl}?amount=0.25&message=GG`, // this href will have a text input
+          href: `${donateUrl}?amount={amount}&message={message}`, // this href will have a text input
           parameters: [
             {
               name: "amount", // parameter name in the `href` above
