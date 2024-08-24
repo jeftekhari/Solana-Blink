@@ -59,7 +59,7 @@
         break;
       }
     }
-    setTimeout(showDisplayData, 5000);
+    setTimeout(showDisplayData, 1000);
   }
 
   function checkSignature(tx) {
@@ -156,6 +156,6 @@
 
   ws.onclose = () => {
     console.log("WebSocket is closed");
-    ws = new WebSocket(rpc);
+    location.reload(true);
   };
 })();
