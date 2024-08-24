@@ -86,18 +86,6 @@ app.get("/donate/:wallet", (req, res) => {
     links: {
       actions: [
         {
-          label: "Send .01 SOL", // button text
-          href: `${donateUrl}?amount=${".01"}`,
-        },
-        {
-          label: "Send .1 SOL", // button text
-          href: `${donateUrl}?amount=${".1"}`,
-        },
-        {
-          label: "Send .2 SOL", // button text
-          href: `${donateUrl}?amount=${".2"}`,
-        },
-        {
           label: `Tip ${creator.name} with SOL!`, // button text
           href: `${donateUrl}`, // this href will have a text input
           parameters: [
@@ -128,7 +116,7 @@ app.post("/donate/:wallet", async (req, res) => {
   const { account } = req.body;
 
   // validate params
-  if (!amount || !message) return res.status(401).send("Missing params");
+  if (!amount || !message) return res.status(400).send("Missing params");
   const parsedAmount = parseFloat(`${amount}`);
   if (!parsedAmount || parsedAmount <= 0) {
     console.error(`invalid amount ${amount}`);
