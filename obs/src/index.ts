@@ -110,6 +110,7 @@ app.get("/donate/:wallet", (req, res) => {
             {
               name: "message", // parameter name in the `href` above
               label: "Enter Message to the streamer", // placeholder of the text input
+              type: "text",
               required: true,
             },
           ],
