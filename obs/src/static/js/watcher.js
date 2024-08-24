@@ -31,9 +31,18 @@
   const display = document.getElementById("display");
   const memoDisplay = document.getElementById("memo");
   const gif = document.getElementById("gif");
+  const audio = document.getElementById("pingAudio")
   var currentIndex = 0;
   var mostRecentTimeStamp = Math.floor(Date.now() / 1000); //UNIX time UTC in SECONDS\
   let displayData = [];
+
+  function playAudio() {
+    audio.play();
+  }
+
+  function pauseAudio() {
+    audio.pause();
+  }
 
   function showDisplayData() {
     console.log("show display data: ", displayData);
@@ -45,6 +54,7 @@
         display.textContent = `${data.amount} SOL Donated`;
         memoDisplay.textContent = data.memo;
         gif.style.display = "block";
+        playAudio();
         data.isDisplayed = true;
         break;
       }

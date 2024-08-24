@@ -13,15 +13,16 @@ export const creatorPage = (creator: string) => {
               src="https://giphy.com/embed/kIvLVjAulfNTcxUPXU"
               width="240"
               height="240"
-              style=""
-              frameBorder="0"
+              style="border: none; border-radius:35px;"
               class="giphy-embed"
-              allowFullScreen
             ></iframe>
             <p>
               <a href="https://giphy.com/gifs/excited-celebrate-yay-kIvLVjAulfNTcxUPXU"></a>
             </p>
           </div>
+          <audio id="pingAudio">
+            <source src="/static/audio/stinks.mp3" type="audio/mpeg"></source>
+          </audio>
         </div>
 
         {/* <p id="text">Loading Account Watcher</p>
