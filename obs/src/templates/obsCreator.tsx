@@ -5,7 +5,7 @@ export const creatorPage = (creator: string) => {
       <body>
         {/* <h1>Blinch OBS Source</h1> */}
 
-        <div>
+        <div id="obsNotification">
           <h2 id="display"></h2>
           <p id="memo"></p>
           <div id="gif">

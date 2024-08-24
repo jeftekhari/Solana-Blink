@@ -46,9 +46,9 @@
 
   function showDisplayData() {
     console.log("show display data: ", displayData);
-    gif.style.display = "none";
-    display.textContent = "";
-    memoDisplay.textContent = "";
+    // gif.style.display = "none";
+    // display.textContent = "";
+    // memoDisplay.textContent = "";
     for (const data of displayData) {
       if (data.isDisplayed === false) {
         display.textContent = `${data.amount} SOL Donated`;
