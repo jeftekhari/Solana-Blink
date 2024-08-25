@@ -46,12 +46,15 @@
   }
 
   function sleep(i) {
-    setTimeout(function () {
+    setTimeout(() => {
       console.log("sleep"); //  your code here
       if (--i) sleep(i); //  decrement i and call myLoop again if i > 0
     }, 1000);
   }
-  function showDisplayData() {
+
+  const timer = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  async function showDisplayData() {
     // console.log("showDisplayData Interval");
     gif.style.display = "none";
     display.textContent = "";
@@ -65,11 +68,11 @@
         gif.style.display = "block";
         playAudio();
         data.isDisplayed = true;
-        sleep(5);
-        // return showDisplayData(); // was testing early return to sleep works
+        // sleep(5);
+        await timer(5000);
       }
     }
-    setTimeout(showDisplayData, 3500); // currently this is the time of gif on screen
+    setTimeout(showDisplayData, 500); // currently this is the time of gif on screen
   }
 
   function checkSignature(tx) {
@@ -155,6 +158,8 @@
           displayData = filteredParsedData;
           if (startup) {
             showDisplayData();
+
+            // setInterval(showDisplayData, 500); // currently this is the time of gif on
           }
           startup = false;
           console.error("final then display data: ", displayData);
