@@ -3,42 +3,6 @@
   font-size: 1.5rem;
 }
 
-::highlight(rainbow-color-1) {
-  color: #ad26ad;
-  text-decoration: underline;
-}
-::highlight(rainbow-color-2) {
-  color: #5d0a99;
-  text-decoration: underline;
-}
-::highlight(rainbow-color-3) {
-  color: #0000ff;
-  text-decoration: underline;
-}
-::highlight(rainbow-color-4) {
-  color: #07c607;
-  text-decoration: underline;
-}
-::highlight(rainbow-color-5) {
-  color: #b3b308;
-  text-decoration: underline;
-}
-::highlight(rainbow-color-6) {
-  color: #ffa500;
-  text-decoration: underline;
-}
-::highlight(rainbow-color-7) {
-  color: #ff0000;
-  text-decoration: underline;
-}
-
-#obsNotification {
-  visibility: hidden; 
-  opacity: 0; 
-  transition: visibility 0s 2s, opacity 2s linear;
-}
-
-
 #gif {
   display: none;
   position: relative;
@@ -51,7 +15,12 @@
   font-size: 30px;
   z-index: 6;
   position: relative;
-  text-shadow: 0px 0px 1px #000, 0px 0px 2px #000, 0px 0px 3px #000, 0px 0px 4px #000, 0px 0px 5px #000;
+  text-shadow:
+    0px 0px 1px #000,
+    0px 0px 2px #000,
+    0px 0px 3px #000,
+    0px 0px 4px #000,
+    0px 0px 5px #000;
   text-align: center;
 }
 
@@ -61,6 +30,11 @@
   font-size: 30px;
   z-index: 6;
   position: relative;
-  text-shadow: 0px 0px 1px #000, 0px 0px 2px #000, 0px 0px 3px #000, 0px 0px 4px #000, 0px 0px 5px #000;
+  text-shadow:
+    0px 0px 1px #000,
+    0px 0px 2px #000,
+    0px 0px 3px #000,
+    0px 0px 4px #000,
+    0px 0px 5px #000;
   text-align: center;
 }

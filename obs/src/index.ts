@@ -30,7 +30,7 @@ const headers = createActionHeaders();
 const conn = new Connection(
   process.env.SOLANA_RPC! || clusterApiUrl("mainnet-beta"),
 );
-console.log(headers)
+console.log(headers);
 app.use(routeLogger);
 // app.use(
 //   cors({
@@ -116,8 +116,9 @@ app.post("/donate/:wallet", async (req, res) => {
   const { account } = req.body;
 
   // validate params
-  if (!amount || !message) return res.status(400).send({error:"Amount and Message required"});
-  const parsedAmount = amount === '{amount}' ? 0.001 : parseFloat(`${amount}`);
+  if (!amount || !message)
+    return res.status(400).send({ error: "Amount and Message required" });
+  const parsedAmount = amount === "{amount}" ? 0.001 : parseFloat(`${amount}`);
   if (!parsedAmount || parsedAmount <= 0) {
     console.error(`invalid amount ${amount}`);
     return res.status(400).send("Amount is too small");

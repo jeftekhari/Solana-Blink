@@ -27,8 +27,13 @@ export const creatorPage = (creator: string) => {
 
         {/* <p id="text">Loading Account Watcher</p>
         <p id="txData">Loading Memos</p> */}
+        <button id="test-btn">test tx</button>
       </body>
-
+      <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"
+      ></script>
       <script src="/static/js/bs58.bundle.js"></script>
       <script src="/static/js/watcher.js"></script>
     </html>

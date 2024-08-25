@@ -6,7 +6,7 @@ export const routeLogger = (
   next: NextFunction,
 ) => {
   console.log(
-    `${req.method} ${req.url} ${req.params ? JSON.stringify(req.params) : ''}`,
+    `${req.method} ${req.url} ${req.params ? JSON.stringify(req.params) : ""}`,
   );
   next();
 };
