@@ -1,6 +1,13 @@
 "use strict";
 
 (function () {
+  const display = document.getElementById("display");
+  const memoDisplay = document.getElementById("memo");
+  const gif = document.getElementById("gif");
+  const audio = document.getElementById("pingAudio");
+  const obsNotification = document.getElementById("obsNotification");
+  let displayData = [];
+
   // Function to send a request to the WebSocket server
   function sendRequest(ws, walletAddress) {
     const request = {
@@ -18,25 +25,6 @@
     ws.send(JSON.stringify(request));
   }
 
-  // Function to send a ping to the WebSocket server
-  function startPing(ws) {
-    setInterval(() => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send("");
-        console.log("Ping sent");
-      }
-    }, 30000); // Ping every 30 seconds
-  }
-
-  const display = document.getElementById("display");
-  const memoDisplay = document.getElementById("memo");
-  const gif = document.getElementById("gif");
-  const audio = document.getElementById("pingAudio");
-  const obsNotification = document.getElementById("obsNotification");
-  var currentIndex = 0;
-  var mostRecentTimeStamp = Math.floor(Date.now() / 1000); //UNIX time UTC in SECONDS\
-  let displayData = [];
-
   async function playAudio() {
     audio.play();
   }
@@ -45,14 +33,9 @@
     audio.pause();
   }
 
-  function sleep(i) {
-    setTimeout(() => {
-      console.log("sleep"); //  your code here
-      if (--i) sleep(i); //  decrement i and call myLoop again if i > 0
-    }, 1000);
+  async function timer(ms) {
+    return new Promise((res) => setTimeout(res, ms));
   }
-
-  const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 
   async function showDisplayData() {
     for (const data of displayData) {
@@ -74,7 +57,7 @@
         await timer(1000);
       }
     }
-    setTimeout(showDisplayData, 500); // currently this is the time of gif on screen
+    setTimeout(showDisplayData, 500); // min time between displaying memo
   }
 
   function checkSignature(tx) {
@@ -118,16 +101,12 @@
       let memoData = "";
       fetch(
         `https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}&limit=15`,
-        // "http://localhost:3000/actions.json",
         {
           method: "GET",
-          //   headers: {},
         },
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log("tx data: ", data);
-          console.log(`most recent timestamp ${mostRecentTimeStamp}`);
           const filteredParsedData = [];
           const filteredRawTXData = data.filter((tx, i) => {
             if (tx.type === "TRANSFER") {
@@ -157,12 +136,9 @@
         })
         .then((filteredParsedData) => {
           console.log("returned txs", filteredParsedData);
-          displayData = filteredParsedData;
-          if (startup) {
-            showDisplayData();
+          displayData = filteredParsedData; // update displayData with our filtered/parsed data
+          if (startup) showDisplayData();
 
-            // setInterval(showDisplayData, 500); // currently this is the time of gif on
-          }
           startup = false;
           console.error("final then display data: ", displayData);
         });
@@ -179,6 +155,7 @@
     console.log("WebSocket is closed");
     location.reload(true);
   };
+
   document.getElementById("test-btn").addEventListener("click", () => {
     console.log("TEST BTN");
     displayData.push({

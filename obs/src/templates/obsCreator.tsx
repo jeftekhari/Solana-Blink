@@ -2,6 +2,12 @@ export const creatorPage = (creator: string) => {
   return (
     <html>
       <link type="text/css" rel="stylesheet" href="/static/css/default.css" />
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+      ></link>
       <body>
         {/* <h1>Blinch OBS Source</h1> */}
 
@@ -27,7 +33,11 @@ export const creatorPage = (creator: string) => {
 
         {/* <p id="text">Loading Account Watcher</p>
         <p id="txData">Loading Memos</p> */}
-        <button id="test-btn">test tx</button>
+        {process.env.NODE_ENV !== "production" ? (
+          <button id="test-btn">test tx</button>
+        ) : (
+          ""
+        )}
       </body>
       <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
