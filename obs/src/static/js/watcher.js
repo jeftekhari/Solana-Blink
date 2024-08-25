@@ -55,21 +55,23 @@
   const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 
   async function showDisplayData() {
-    // console.log("showDisplayData Interval");
-    gif.style.display = "none";
-    display.textContent = "";
-    memoDisplay.textContent = "";
     for (const data of displayData) {
       if (data.isDisplayed === false) {
         console.log("donation!");
-        obsNotification.style.visibility = "visibile";
+
+
         display.textContent = `${data.amount} SOL Donated`;
         memoDisplay.textContent = data.memo;
-        gif.style.display = "block";
         playAudio();
+        obsNotification.className = "show"
         data.isDisplayed = true;
-        // sleep(5);
-        await timer(5000);
+
+        // !!! IMPORTANT the animation can not be longer or equal to the total 
+        // display timer amound or the next donatation will not display !!!
+        await timer(5000); //sleep 5 seconds
+        obsNotification.classList.remove("show");
+        // Pause before displaying the next donation
+        await timer(1000);
       }
     }
     setTimeout(showDisplayData, 500); // currently this is the time of gif on screen
