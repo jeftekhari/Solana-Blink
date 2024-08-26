@@ -42,14 +42,13 @@
       if (data.isDisplayed === false) {
         console.log("donation!");
 
-
         display.textContent = `${data.amount} SOL Donated`;
         memoDisplay.textContent = data.memo;
         playAudio();
-        obsNotification.className = "show"
+        obsNotification.className = "show";
         data.isDisplayed = true;
 
-        // !!! IMPORTANT the animation can not be longer or equal to the total 
+        // !!! IMPORTANT the animation can not be longer or equal to the total
         // display timer amound or the next donatation will not display !!!
         await timer(5000); //sleep 5 seconds
         obsNotification.classList.remove("show");
@@ -78,6 +77,8 @@
   const apiKey = "bc25d0b5-2b75-4ac3-81b9-a2f37ff51660";
   const walletAddress = params[0].split("=")[1];
   if (!apiKey) throw new Error("NO API KEY FOUND");
+
+  const api = `https://api.helius.xyz/v0/addresses/${walletAddress}`;
   const rpc = `wss://mainnet.helius-rpc.com/?api-key=${apiKey}`;
   const ws = new WebSocket(rpc);
   const enc = new TextDecoder("utf-8");
@@ -99,14 +100,14 @@
       console.log("Received:", messageObj);
 
       let memoData = "";
-      fetch(
-        `https://api.helius.xyz/v0/addresses/${walletAddress}/transactions?api-key=${apiKey}&limit=15`,
-        {
-          method: "GET",
-        },
-      )
-        .then((response) => response.json())
+      const limit = 15;
+      fetch(`${api}/transactions?api-key=${apiKey}&limit=${limit}`)
+        .then((response) => {
+          if (response.status === 429) throw new Error("Rate limited bro");
+          return response.json();
+        })
         .then((data) => {
+          console.log("raw TXs", data);
           const filteredParsedData = [];
           const filteredRawTXData = data.filter((tx, i) => {
             if (tx.type === "TRANSFER") {

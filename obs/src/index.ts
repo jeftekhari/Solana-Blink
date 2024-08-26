@@ -204,7 +204,6 @@ app.post("/donate/:wallet", async (req, res) => {
 app.get("/obs/", (req, res) => {
   res.send(`${creatorPage(req.query.walletAddress as string)}`);
 });
-
 app.listen(port, () =>
   console.warn(
     `Successful start up at :${port} open up localhost:${port}/static into OBS`,

@@ -39,12 +39,14 @@
 }
 
 #obsNotification {
-  visibility: hidden;  
+  visibility: hidden;
   z-index: 1;
 }
 #obsNotification.show {
   visibility: visible;
-  animation: fadeIn 0.5s, fadeOut 0.5s 4s forwards;
+  animation:
+    fadeIn 0.5s,
+    fadeOut 0.5s 4s forwards;
 }
 
 @keyframes fadeIn {
