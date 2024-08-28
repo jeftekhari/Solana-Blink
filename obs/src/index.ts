@@ -58,24 +58,27 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.options("/actions.json", (_, res) => res.send());
-// app.get("/actions.json", (_, res) => {
-//   const payload: ActionsJson = {
-//     rules: [
-//       // map all root level routes to an action
-//       {
-//         pathPattern: "/*",
-//         apiPath: "/donate/*",
-//       },
-//       // idempotent rule as the fallback
-//       {
-//         pathPattern: "/donate/**",
-//         apiPath: "/donate/**",
-//       },
-//     ],
-//   };
-//   res.send(payload);
-// });
+app.options("/actions.json", (_, res) => res.send());
+app.get("/actions.json", (_, res) => {
+  const payload: ActionsJson = {
+    rules: [
+      // map all root level routes to an action
+      {
+        pathPattern: "/*",
+        apiPath: "/donate/*",
+      },
+      // idempotent rule as the fallback
+      {
+        pathPattern: "/donate/**",
+        apiPath: "/donate/**",
+      },
+    ],
+  };
+
+  return Response.json(payload, {
+    headers: createActionHeaders(),
+  });
+});
 // required for CORS
 app.options("/donate/:wallet", (_, res) => res.send());
 app.get("/donate/:wallet", (req, res) => {
