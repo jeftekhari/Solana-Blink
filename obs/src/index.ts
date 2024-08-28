@@ -9,6 +9,7 @@ import {
   createActionHeaders,
   MEMO_PROGRAM_ID,
   type NextAction,
+  actionCorsMiddleware,
 } from "@solana/actions";
 import {
   clusterApiUrl,
@@ -26,9 +27,6 @@ import { creatorPage } from "./templates/obsCreator";
 const app = express();
 const port = process.env.PORT || 3000;
 const origin = process.env.ORIGIN || `http://localhost:${port}`;
-// create the standard headers for this route (including CORS)
-const headers = createActionHeaders();
-console.log(headers);
 const conn = new Connection(
   process.env.SOLANA_RPC! || clusterApiUrl("mainnet-beta"),
 );
@@ -42,10 +40,9 @@ app.get("/obs/", (req, res) => {
 });
 
 // API stuff
-// work around a bug where the json payload callback gets sent as text/plaintext
-app.use(express.raw({ type: "text/*", limit: "1mb" }));
+app.use(express.raw({ type: "text/*", limit: "1kb" })); // work around a bug where the json payload callback gets sent as text/plaintext
+app.use(actionCorsMiddleware(createActionHeaders()));  // set the headers for all routes below, required for actions to work properly
 app.use((req, res, next) => {
-  res.set(headers); // set the headers for all routes below, required for actions to work properly
   if (req.headers["content-type"] === "text/plain;charset=UTF-8") {
     try {
       console.log("we're gonna try to parse");
