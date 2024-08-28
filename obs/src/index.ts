@@ -65,19 +65,16 @@ app.get("/actions.json", (_, res) => {
       // map all root level routes to an action
       {
         pathPattern: "/*",
-        apiPath: "/donate/*",
+        apiPath: "/donate/*"
       },
       // idempotent rule as the fallback
       {
         pathPattern: "/donate/**",
-        apiPath: "/donate/**",
-      },
-    ],
+        apiPath: "/donate/**"
+      }
+    ]
   };
-
-  return Response.json(payload, {
-    headers: createActionHeaders(),
-  });
+  res.send(payload);
 });
 // required for CORS
 app.options("/donate/:wallet", (_, res) => res.send());
