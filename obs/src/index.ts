@@ -8,6 +8,7 @@ import {
   type ActionsJson,
   createActionHeaders,
   MEMO_PROGRAM_ID,
+  type NextAction,
 } from "@solana/actions";
 import {
   clusterApiUrl,
@@ -27,27 +28,40 @@ const port = process.env.PORT || 3000;
 const origin = process.env.ORIGIN || `http://localhost:${port}`;
 // create the standard headers for this route (including CORS)
 const headers = createActionHeaders();
+console.log(headers);
 const conn = new Connection(
   process.env.SOLANA_RPC! || clusterApiUrl("mainnet-beta"),
 );
-console.log(headers);
+
+// Website Stuff
 app.use(routeLogger);
-// app.use(
-//   cors({
-//     origin: "*",
-//     methods: ["GET","POST","PUT","OPTIONS"],
-//     allowedHeaders: headers,
-//   }),
-// );
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use("/static", express.static(path.join(__dirname, ".", "static")));
 app.get("/", (_, res) => res.redirect("/static/"));
-// required for CORS
-app.options("/actions.json", (_, res) => {
-  res.set(headers);
-  res.send();
+app.get("/obs/", (req, res) => {
+  res.send(`${creatorPage(req.query.walletAddress as string)}`);
 });
+
+// API stuff
+// work around a bug where the json payload callback gets sent as text/plaintext
+app.use(express.raw({ type: "text/*", limit: "1mb" }));
+app.use((req, res, next) => {
+  res.set(headers); // set the headers for all routes below, required for actions to work properly
+  if (req.headers["content-type"] === "text/plain;charset=UTF-8") {
+    try {
+      console.log("we're gonna try to parse");
+      req.body = JSON.parse(req.body);
+    } catch (e) {
+      console.error("could not parse gl");
+    }
+  }
+  next();
+});
+
+// parse json payloads and parms into json
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.options("/actions.json", (_, res) => res.send());
 app.get("/actions.json", (_, res) => {
   const payload: ActionsJson = {
     rules: [
@@ -63,19 +77,13 @@ app.get("/actions.json", (_, res) => {
       },
     ],
   };
-  res.set(headers);
   res.send(payload);
 });
 // required for CORS
-app.options("/donate/:wallet", (_, res) => {
-  res.set(headers);
-  res.send();
-});
+app.options("/donate/:wallet", (_, res) => res.send());
 app.get("/donate/:wallet", (req, res) => {
-  res.set(headers);
   const { wallet } = req.params;
   const donateUrl = `/donate/${wallet}`;
-  console.error(req.params);
   const creator = getCreator(wallet);
   if (!creator) return res.status(400).send("Wallet not in database");
   const payload: ActionGetResponse = {
@@ -110,7 +118,6 @@ app.get("/donate/:wallet", (req, res) => {
   res.send(payload);
 });
 app.post("/donate/:wallet", async (req, res) => {
-  res.set(headers);
   const { wallet } = req.params;
   let { amount, message } = req.query;
   const { account } = req.body;
@@ -172,21 +179,13 @@ app.post("/donate/:wallet", async (req, res) => {
       }),
     );
 
-    // console.log(transaction);
-    // versioned transactions are also supported
-    // const transaction = new VersionedTransaction(
-    //   new TransactionMessage({
-    //     payerKey: sender,
-    //     recentBlockhash: blockhash,
-    //     instructions: [transferSolInstruction],
-    //   }).compileToV0Message(),
-    //   // note: you can also use `compileToLegacyMessage`
-    // );
-
     const payload: ActionPostResponse = await createPostResponse({
       fields: {
         transaction,
         message: `Send ${amount} SOL to ${receiver.toBase58()}`,
+        links: {
+          next: { type: "post", href: `/donate/${wallet}/confirmed` },
+        },
       },
       // note: no additional signers are needed
       // signers: [],
@@ -200,10 +199,25 @@ app.post("/donate/:wallet", async (req, res) => {
     return res.status(500).send("Server Error, check logs");
   }
 });
+// callback
+app.options("/donate/:wallet/confirmed", (_, res) => res.send());
+app.post("/donate/:wallet/confirmed", (req, res) => {
+  const { wallet } = req.params;
+  const { account, signature } = req.body;
+  console.error(account, signature);
+  const creator = getCreator(wallet);
+  if (!creator) return res.status(400).send("Wallet not in database");
 
-app.get("/obs/", (req, res) => {
-  res.send(`${creatorPage(req.query.walletAddress as string)}`);
+  const nextAction: NextAction = {
+    type: "completed",
+    icon: `${origin}/static/img/${creator.icon}`,
+    title: "LFGGGGG for real!!",
+    description: creator.description,
+    label: "Donated!",
+  };
+  res.send(nextAction);
 });
+
 app.listen(port, () =>
   console.warn(
     `Successful start up at :${port} open up localhost:${port}/static into OBS`,
