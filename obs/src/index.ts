@@ -37,8 +37,14 @@ app.use("/static", express.static(path.join(__dirname, ".", "static")));
 app.get("/", (_, res) => res.send(`<html><head>
 <title>The Rock (1996)</title>
 <meta property="og:title" content="Tip Manboy" />
-<meta property="og:url" content="https://blink.fren.tools/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa" />
+<meta property="og:description" content="Money Please" />
+<meta property="og:url" content="https://blink.fren.tools/" />
 <meta property="og:image" content="https://blink.fren.tools/static/img/ManBoy.png" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@JoeEftah">
+<meta name="twitter:title" content="Manboy Blink">
+<meta name="twitter:description" content="Tip Your Streamer">
+<meta name="twitter:image" content="https://blink.fren.tools/static/img/ManBoy.png">
 </head></html>`));
 app.get("/obs/", (req, res) => {
   res.send(`${creatorPage(req.query.walletAddress as string)}`);
@@ -70,13 +76,13 @@ app.get("/actions.json", (_, res) => {
     rules: [
       // map all root level routes to an action
       {
-        pathPattern: "/*",
-        apiPath: "/donate/*"
+        pathPattern: "/",
+        apiPath: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa"
       },
       // idempotent rule as the fallback
       {
-        pathPattern: "/donate/**",
-        apiPath: "/donate/**"
+        pathPattern: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa",
+        apiPath: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa"
       }
     ]
   };
