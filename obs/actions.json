@@ -1,0 +1,13 @@
+
+{
+   "rules": [
+        {
+          "pathPattern": "/*",
+          "apiPath": "/donate/*",
+        },
+        {
+          "pathPattern": "/donate/**",
+          "apiPath": "/donate/**"
+        }
+    ]
+}
