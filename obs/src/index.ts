@@ -54,16 +54,20 @@ app.get("/", (_, res) => res.send(`<html><head>
 app.get("/obs/", (req, res) => {
   res.send(`${creatorPage(req.query.walletAddress as string)}`);
 });
-app.get("/robots.txt", (_, res) => res.send(`# Disallow everything.
-User-agent: *
-Disallow: /
+app.get("/robots.txt", (_, res) => {
+  res.setHeader('content-type', 'text/plain;charset=UTF-8');
+  res.send(`# Disallow everything.
+  User-agent: *
+  Disallow: /
 
-# Certain social media sites are whitelisted to allow crawlers to access page markup when links to /images are shared. 
-User-agent: Twitterbot
-Allow: /
+  # Certain social media sites are whitelisted to allow crawlers to access page markup when links to /images are shared. 
+  User-agent: Twitterbot
+  Allow: /
 
-User-agent: facebookexternalhit
-Allow: /`))
+  User-agent: facebookexternalhit
+  Allow: /`)
+  })
+
 
 // API stuff
 app.use(express.raw({ type: "text/*", limit: "1kb" })); // work around a bug where the json payload callback gets sent as text/plaintext
