@@ -34,12 +34,12 @@ const conn = new Connection(
 // Website Stuff
 app.use(routeLogger);
 app.use("/static", express.static(path.join(__dirname, ".", "static")));
-app.get("/", (_, res) => res.send(`<head>
+app.get("/", (_, res) => res.send(`<html><head>
 <title>The Rock (1996)</title>
 <meta property="og:title" content="Tip Manboy" />
 <meta property="og:url" content="https://blink.fren.tools/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa" />
-<meta property="og:image" content="https://ia.media-imdb.com/images/rock.jpg" />
-</head>`));
+<meta property="og:image" content="https://blink.fren.tools/static/img/ManBoy.png" />
+</head></html>`));
 app.get("/obs/", (req, res) => {
   res.send(`${creatorPage(req.query.walletAddress as string)}`);
 });
