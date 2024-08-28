@@ -3,7 +3,7 @@
    "rules": [
         {
           "pathPattern": "/*",
-          "apiPath": "/donate/*",
+          "apiPath": "/donate/*"
         },
         {
           "pathPattern": "/donate/**",

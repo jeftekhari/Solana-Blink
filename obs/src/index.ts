@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.options("/actions.json", (_, res) => res.send());
+// app.options("/actions.json", (_, res) => res.send());
 // app.get("/actions.json", (_, res) => {
 //   const payload: ActionsJson = {
 //     rules: [
