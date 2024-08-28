@@ -35,7 +35,7 @@ const conn = new Connection(
 app.use(routeLogger);
 app.use("/static", express.static(path.join(__dirname, ".", "static")));
 app.get("/", (_, res) => res.send(`<html><head>
-<title>The Rock (1996)</title>
+<title>Blink Fren Tools</title>
 <meta property="og:title" content="Tip Manboy" />
 <meta property="og:description" content="Money Please" />
 <meta property="og:url" content="https://blink.fren.tools/" />
