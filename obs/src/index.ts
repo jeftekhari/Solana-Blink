@@ -39,6 +39,8 @@ app.get("/", (_, res) => res.send(`<html><head>
 <meta property="og:title" content="Tip Manboy" />
 <meta property="og:description" content="Money Please" />
 <meta property="og:url" content="https://blink.fren.tools/" />
+<meta property="og:site_name" content="FrenTools">
+<meta property="og:type" content="website">
 <meta property="og:image" content="https://blink.fren.tools/static/img/ManBoy.png" />
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@JoeEftah">
