@@ -34,7 +34,7 @@ const conn = new Connection(
 // Website Stuff
 app.use(routeLogger);
 app.use("/static", express.static(path.join(__dirname, ".", "static")));
-app.get("/", (_, res) => res.redirect("/static/"));
+app.get("/", (_, res) => res.send("OK"));
 app.get("/obs/", (req, res) => {
   res.send(`${creatorPage(req.query.walletAddress as string)}`);
 });
@@ -59,6 +59,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.options("/actions.json", (_, res) => res.send());
+// app.get("/actions.json", (_, res) => res.redirect("/actions.json"))
 app.get("/actions.json", (_, res) => {
   const payload: ActionsJson = {
     rules: [
