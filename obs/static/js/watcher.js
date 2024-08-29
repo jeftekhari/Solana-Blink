@@ -74,7 +74,7 @@
   var params = getQuery ? getQuery.split("&") : [];
   //   console.log(params);
   const MEMO_CA = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";
-  const apiKey = "bc25d0b5-2b75-4ac3-81b9-a2f37ff51660";
+  const apiKey = "ab76bf30-f18e-4bc8-8e09-9902ba069fd2";
   const walletAddress = params[0].split("=")[1];
   if (!apiKey) throw new Error("NO API KEY FOUND");
 
@@ -154,7 +154,7 @@
 
   ws.onclose = () => {
     console.log("WebSocket is closed");
-    // location.reload(true);
+    location.reload(true);
   };
 
   document.getElementById("test-btn").addEventListener("click", () => {
