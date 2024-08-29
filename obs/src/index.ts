@@ -23,6 +23,7 @@ import {
 import { DEFAULT_MSG_SIGN, getCreator } from "./constants";
 import { routeLogger } from "./middleware";
 import { creatorPage } from "./templates/obsCreator";
+import { tags } from "./templates/donatePage";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -32,30 +33,14 @@ const conn = new Connection(
 );
 
 // Website Stuff
-app.use(routeLogger);
-app.use("/static", express.static(path.join(__dirname, ".", "static")));
-app.get("/", (_, res) => res.send(`<html><head>
-<title>Blink Fren Tools</title>
-<meta property="og:title" content="Tip Manboy" />
-<meta property="og:description" content="Money Please" />
-<meta property="og:url" content="https://blink.fren.tools/" />
-<meta property="og:site_name" content="FrenTools">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://blink.fren.tools/static/img/ManBoy.png" />
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@JoeEftah">
-<meta name="twitter:title" content="Manboy Blink">
-<meta name="twitter:description" content="Tip Your Streamer">
-<meta name="twitter:image" content="https://blink.fren.tools/static/img/ManBoy.png">
-</head></html>`));
+// app.use(routeLogger);
+app.use("/static", express.static("static")); // use this pattern to serve files or folders
+app.get("/", (_, res) => res.send(`${tags()}`));
 app.get("/obs/", (req, res) => {
   res.send(`${creatorPage(req.query.walletAddress as string)}`);
 });
 app.get("/robots.txt", (_, res) => {
-  res.setHeader('content-type', 'text/plain;charset=UTF-8');
+  res.setHeader("content-type", "text/plain;charset=UTF-8");
   res.send(`# Disallow everything.
   User-agent: *
   Disallow: /
@@ -65,13 +50,12 @@ app.get("/robots.txt", (_, res) => {
   Allow: /
 
   User-agent: facebookexternalhit
-  Allow: /`)
-  })
-
+  Allow: /`);
+});
 
 // API stuff
 app.use(express.raw({ type: "text/*", limit: "1kb" })); // work around a bug where the json payload callback gets sent as text/plaintext
-app.use(actionCorsMiddleware(createActionHeaders()));  // set the headers for all routes below, required for actions to work properly
+app.use(actionCorsMiddleware(createActionHeaders())); // set the headers for all routes below, required for actions to work properly
 app.use((req, res, next) => {
   if (req.headers["content-type"] === "text/plain;charset=UTF-8") {
     try {
@@ -88,28 +72,29 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.options("/actions.json", (_, res) => res.send());
-// app.get("/actions.json", (_, res) => res.redirect("/actions.json"))
 app.get("/actions.json", (_, res) => {
   const payload: ActionsJson = {
     rules: [
       // map all root level routes to an action
       {
         pathPattern: "/",
-        apiPath: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa"
+        apiPath: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa",
       },
       // idempotent rule as the fallback
       {
         pathPattern: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa",
-        apiPath: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa"
-      }
-    ]
+        apiPath: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa",
+      },
+    ],
   };
   res.send(payload);
 });
-// required for CORS
-app.options("/donate/:wallet", (_, res) => res.send());
 app.get("/donate/:wallet", (req, res) => {
+  const agent = req.get("User-Agent");
+  console.log(agent);
+  // if twitter respond with html
+  if (agent?.startsWith("Twitterbot")) return res.send(`${tags()}`);
+
   const { wallet } = req.params;
   const donateUrl = `/donate/${wallet}`;
   const creator = getCreator(wallet);
@@ -228,7 +213,6 @@ app.post("/donate/:wallet", async (req, res) => {
   }
 });
 // callback
-app.options("/donate/:wallet/confirmed", (_, res) => res.send());
 app.post("/donate/:wallet/confirmed", (req, res) => {
   const { wallet } = req.params;
   const { account, signature } = req.body;
