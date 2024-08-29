@@ -77,13 +77,13 @@ app.get("/actions.json", (_, res) => {
     rules: [
       // map all root level routes to an action
       {
-        pathPattern: "/*",
-        apiPath: "/donate/*",
+        pathPattern: "/",
+        apiPath: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa",
       },
       // idempotent rule as the fallback
       {
-        pathPattern: "/donate/**",
-        apiPath: "/donate/**",
+        pathPattern: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa",
+        apiPath: "/donate/CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa",
       },
     ],
   };
