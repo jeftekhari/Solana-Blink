@@ -154,7 +154,7 @@
 
   ws.onclose = () => {
     console.log("WebSocket is closed");
-    location.reload(true);
+    // location.reload(true);
   };
 
   document.getElementById("test-btn").addEventListener("click", () => {
