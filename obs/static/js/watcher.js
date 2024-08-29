@@ -74,7 +74,7 @@
   var params = getQuery ? getQuery.split("&") : [];
   //   console.log(params);
   const MEMO_CA = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";
-  const apiKey = "ab76bf30-f18e-4bc8-8e09-9902ba069fd2";
+  const apiKey = "3753a521-192c-4002-a602-2a54b419744a";
   const walletAddress = params[0].split("=")[1];
   if (!apiKey) throw new Error("NO API KEY FOUND");
 
@@ -83,6 +83,37 @@
   const ws = new WebSocket(rpc);
   const enc = new TextDecoder("utf-8");
   let startup = true;
+
+  //gets transaction(s) from a signature and sends it to be displayed. 
+  async function getTransaction(signatures) {
+    const url = `https://api.helius.xyz/v0/transactions?api-key=${apiKey}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({ "transactions": signatures})
+    });
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const txs = await response.json();
+
+    for(let tx of txs) {
+      displayData.push({
+        signature: tx.signature,
+        amount: tx.description.split(" ")[2],
+        memo: enc.decode(bs58.default.decode(tx.instructions[3].data)).replace("twinkMemo:", ""),
+        timestamp: tx.timestamp,
+        isDisplayed: false,
+      });
+    }
+    console.log(displayData);
+    console.log(txs);
+  }
+
+  // this is for testing, it needs to be integrated with a websocket in the future
+  // getTransaction(["54mzC87HmS33Z5CS3xAgjHGC2Tx2qehzqFTqAW8FAFVq1jUcQ7ic99bAHkJ6m9HtbDBFaPNZPaTPGWyEafhR1o1F"]);
+  // showDisplayData();
 
   ws.onopen = () => {
     console.log("Websocket open");
