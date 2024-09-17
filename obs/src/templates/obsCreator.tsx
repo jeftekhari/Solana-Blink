@@ -1,4 +1,6 @@
-export const creatorPage = (creator: string) => {
+import type { Creator } from "../types";
+
+export const creatorPage = (user: Creator) => {
   return (
     <html>
       <link type="text/css" rel="stylesheet" href="/static/css/default.css" />

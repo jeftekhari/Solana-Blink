@@ -84,13 +84,13 @@
   const enc = new TextDecoder("utf-8");
   let startup = true;
 
-  //gets transaction(s) from a signature and sends it to be displayed. 
+  //gets transaction(s) from a signature and sends it to be displayed.
   async function getTransaction(signatures) {
     const url = `https://api.helius.xyz/v0/transactions?api-key=${apiKey}`;
 
     const response = await fetch(url, {
       method: "POST",
-      body: JSON.stringify({ "transactions": signatures})
+      body: JSON.stringify({ transactions: signatures }),
     });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
@@ -98,11 +98,13 @@
 
     const txs = await response.json();
 
-    for(let tx of txs) {
+    for (let tx of txs) {
       displayData.push({
         signature: tx.signature,
         amount: tx.description.split(" ")[2],
-        memo: enc.decode(bs58.default.decode(tx.instructions[3].data)).replace("twinkMemo:", ""),
+        memo: enc
+          .decode(bs58.default.decode(tx.instructions[3].data))
+          .replace("twinkMemo:", ""),
         timestamp: tx.timestamp,
         isDisplayed: false,
       });

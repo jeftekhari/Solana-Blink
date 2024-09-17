@@ -1,6 +1,4 @@
-import cors from "cors";
 import express from "express";
-import path from "path";
 import {
   type ActionPostResponse,
   createPostResponse,
@@ -31,11 +29,13 @@ const origin = process.env.ORIGIN || `http://localhost:${port}`;
 const conn = new Connection(
   process.env.SOLANA_RPC! || clusterApiUrl("mainnet-beta"),
 );
-
+const arg = process.argv[2] || "CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa";
 // Website Stuff
-// app.use(routeLogger);
+app.use(routeLogger);
 app.use("/static", express.static("static")); // use this pattern to serve files or folders
-app.get("/", (_, res) => res.send(`${tags()}`));
+app.get("/", (_, res) =>
+  res.send(`${tags(getCreator(arg))}`),
+);
 app.get("/obs/", (req, res) => {
   res.send(`${creatorPage(req.query.walletAddress as string)}`);
 });
@@ -89,6 +89,7 @@ app.get("/actions.json", (_, res) => {
   };
   res.send(payload);
 });
+
 app.get("/donate/:wallet", (req, res) => {
   const agent = req.get("User-Agent");
   console.log(agent);
@@ -130,6 +131,7 @@ app.get("/donate/:wallet", (req, res) => {
   };
   res.send(payload);
 });
+
 app.post("/donate/:wallet", async (req, res) => {
   const { wallet } = req.params;
   let { amount, message } = req.query;
