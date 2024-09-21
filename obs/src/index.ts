@@ -279,7 +279,7 @@ app.post("/signup", express.json(), (req, res) => {
   }
 });
 
-app.get("/api/search", (req, res) => {
+app.get("/search", (req, res) => {
   const query = req.query.q?.toString().toLowerCase();
   if (!query) {
     return res.send("<li>Please enter a search query</li>");

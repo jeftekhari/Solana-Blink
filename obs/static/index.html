@@ -48,14 +48,14 @@
             id="searchInput"
             name="q"
             placeholder="Enter streamer name or wallet address"
-            hx-get="/api/search"
+            hx-get="/search"
             hx-trigger="keyup changed delay:500ms, search"
             hx-target="#searchResults"
             hx-indicator="#spinner"
           />
           <button
             id="searchButton"
-            hx-get="/api/search"
+            hx-get="/search"
             hx-trigger="click"
             hx-target="#searchResults"
             hx-include="#searchInput"
