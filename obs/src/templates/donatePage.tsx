@@ -12,7 +12,7 @@ export const tags = (user: Creator) => {
         <meta name="og:type" content="website" />
         <meta
           name="og:image"
-          content={`https://blink.fren.tools/static/img/${user.icon}`}
+          content={`https://blink.fren.tools/img/${user.icon}`}
         />
         <meta name="og:image:width" content="1200" />
         <meta name="og:image:height" content="630" />
@@ -23,35 +23,30 @@ export const tags = (user: Creator) => {
         <meta name="twitter:description" content={user.description} />
         <meta
           name="twitter:image"
-          content={`https://blink.fren.tools/static/img/${user.icon}`}
+          content={`https://blink.fren.tools/img/${user.icon}`}
         />
-        <link rel="stylesheet" href="/static/css/donatePage.css" />
+        <link rel="stylesheet" href="/css/donatePage.css" />
       </head>
       <body>
         <div class="container">
           <header>
-            <img
-              src={`/static/img/${user.icon}`}
-              alt={`${user.name}'s avatar`}
-            />
+            <img src={`/img/${user.icon}`} alt={`${user.name}'s avatar`} />
             <h1>{user.name}</h1>
             <p>{user.description}</p>
           </header>
-          
+
           <main>
             <div class="card">
               <h2>About Me</h2>
               <p>{user.description}</p>
             </div>
-            
+
             <div class="card">
               <h2>Support Me</h2>
               <p>If you enjoy my content, consider supporting me:</p>
               <ul>
                 <li>
-                  <a href="">
-                    [DONATE]
-                  </a>
+                  <a href="">[DONATE]</a>
                 </li>
                 <li>
                   <a href={`https://twitter.com/${user.twitter}`}>
@@ -62,7 +57,10 @@ export const tags = (user: Creator) => {
             </div>
           </main>
           <footer>
-            <p>&copy; {new Date().getFullYear()} {user.name} | Last updated: {new Date().toLocaleDateString()}</p>
+            <p>
+              &copy; {new Date().getFullYear()} {user.name} | Last updated:{" "}
+              {new Date().toLocaleDateString()}
+            </p>
           </footer>
         </div>
       </body>

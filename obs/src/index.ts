@@ -22,6 +22,10 @@ import { DEFAULT_MSG_SIGN, getCreator } from "./constants";
 import { routeLogger } from "./middleware";
 import { creatorPage } from "./templates/obsCreator";
 import { tags } from "./templates/donatePage";
+import { signupPage } from "./templates/signUp";
+import { addCreator } from "./constants";
+import type { Creator } from "./types";
+import { creators } from "./constants";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,13 +33,11 @@ const origin = process.env.ORIGIN || `http://localhost:${port}`;
 const conn = new Connection(
   process.env.SOLANA_RPC! || clusterApiUrl("mainnet-beta"),
 );
-const arg = process.argv[2] || "CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa";
+const arg = process.argv[2] || "ManBoy";
 // Website Stuff
 app.use(routeLogger);
-app.use("/static", express.static("static")); // use this pattern to serve files or folders
-app.get("/", (_, res) =>
-  res.send(`${tags(getCreator(arg))}`),
-);
+app.use(express.static("static")); // use this pattern to serve files or folders
+
 app.get("/obs/", (req, res) => {
   res.send(`${creatorPage(req.query.walletAddress as string)}`);
 });
@@ -102,7 +104,7 @@ app.get("/donate/:wallet", (req, res) => {
   if (!creator) return res.status(400).send("Wallet not in database");
   const payload: ActionGetResponse = {
     title: "Tip Your Favorite Streamer!",
-    icon: `${origin}/static/img/${creator.icon}`,
+    icon: `${origin}/img/${creator.icon}`,
     description: creator.description,
     label: "Transfer", // this value will be ignored since `links.actions` exists
     links: {
@@ -193,7 +195,6 @@ app.post("/donate/:wallet", async (req, res) => {
         keys: [],
       }),
     );
-
     const payload: ActionPostResponse = await createPostResponse({
       fields: {
         transaction,
@@ -224,7 +225,7 @@ app.post("/donate/:wallet/confirmed", (req, res) => {
 
   const nextAction: NextAction = {
     type: "completed",
-    icon: `${origin}/static/img/${creator.icon}`,
+    icon: `${origin}/img/${creator.icon}`,
     title: "LFGGGGG for real!!",
     description: creator.description,
     label: "Donated!",
@@ -232,8 +233,74 @@ app.post("/donate/:wallet/confirmed", (req, res) => {
   res.send(nextAction);
 });
 
+app.get("/profiles/:username", (req, res) => {
+  const { username } = req.params;
+  const creator = getCreator(username);
+  if (!creator) {
+    return res.status(404).send("Creator not found");
+  }
+  res.setHeader("Content-Type", "text/html");
+  res.type(".html");
+  res.send(`${tags(creator)}`);
+});
+
 app.listen(port, () =>
   console.warn(
-    `Successful start up at :${port} open up localhost:${port}/static into OBS`,
+    `Successful start up at :${port} open up localhost:${port} into OBS`,
   ),
 );
+
+app.get("/signup", (_, res) => {
+  res.setHeader("Content-Type", "text/html");
+  res.type(".html");
+  res.send(`${signupPage()}`);
+});
+
+app.post("/signup", express.json(), (req, res) => {
+  const { name, twitter, icon, description, walletAddress } = req.body;
+
+  if (!name || !twitter || !icon || !description || !walletAddress) {
+    return res.status(400).send("All fields are required");
+  }
+
+  const newCreator: Creator = {
+    name,
+    twitter,
+    icon,
+    description,
+    walletAddress,
+  };
+
+  try {
+    addCreator(newCreator);
+    res.redirect(`/profiles/${name}`);
+  } catch (error) {
+    res.status(400).send("Error adding creator");
+  }
+});
+
+app.get("/api/search", (req, res) => {
+  const query = req.query.q?.toString().toLowerCase();
+  if (!query) {
+    return res.send("<li>Please enter a search query</li>");
+  }
+
+  const results = Array.from(creators.values()).filter(
+    (creator) =>
+      creator.name.toLowerCase().includes(query) ||
+      creator.walletAddress.toLowerCase().includes(query),
+  );
+
+  if (results.length === 0) {
+    return res.send("<li>No results found</li>");
+  }
+
+  const html = results
+    .map(
+      (creator) =>
+        `<li><a href="/profiles/${creator.name}">${creator.name}</a></li>`,
+    )
+    .join("");
+
+  res.send(html);
+});

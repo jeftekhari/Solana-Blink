@@ -11,12 +11,23 @@ export const DEFAULT_MSG_SIGN: string = "twinkMemo: ";
 
 // TODO: move to redis
 let creators = new Map<string, Creator>();
+export { creators };
 
-export const getCreator = (c: string) => creators.get(c);
+export const getCreator = (username: string): Creator | undefined =>
+  creators.get(username);
 
-creators.set("CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa", {
+creators.set("ManBoy", {
   name: "ManBoy",
   twitter: "JoeEftah",
   icon: "ManBoy.png",
   description: "Tipping Manboy",
+  walletAddress: "CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa",
 });
+
+// TODO: fix this
+export const addCreator = (newCreator: Creator) => {
+  if (creators.has(newCreator.name)) {
+    throw new Error("Creator with this name already exists");
+  }
+  creators.set(newCreator.name, newCreator);
+};

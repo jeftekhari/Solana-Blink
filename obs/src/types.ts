@@ -3,4 +3,5 @@ export type Creator = {
   twitter: string;
   icon: string;
   description: string;
+  walletAddress: string;
 };

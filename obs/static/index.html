@@ -1,24 +1,77 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blinch Home Page</title>
-  <link type="text/css" rel="stylesheet" href="/static/css/default.css" />
-  <link rel="stylesheet" href="/static/css/donatePage.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>Blinch Home Page</h1>
-    <div class="card">
-      <h2>&lt;&lt;&lt; Go to OBS page &gt;&gt;&gt;</h2>
-      <p>
-        <!-- TODO: sign up page and after login we give them link to obs source page -->
-        <a href="/obs?walletAddress=CMeb68prsa7HmmVurnFLYQztAtgERsFNthvjddYJCJXa">
-          [ENTER THE BLINCH ZONE]
-        </a>
-      </p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Streamor</title>
+    <link type="text/css" rel="stylesheet" href="/css/default.css" />
+    <link rel="stylesheet" href="/css/donatePage.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+      .search-container {
+        display: flex;
+        margin-bottom: 1rem;
+      }
+      #searchInput {
+        flex-grow: 1;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 2px solid #00ff00;
+        background-color: #1e1e1e;
+        color: #00ff00;
+      }
+      #searchButton {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        background-color: #00ff00;
+        color: #000000;
+        border: none;
+        cursor: pointer;
+      }
+      #searchResults {
+        list-style-type: none;
+        padding: 0;
+      }
+      #searchResults li {
+        margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Streamor Home Page</h1>
+      <div class="card">
+        <h2>Search for a Streamer!</h2>
+        <div class="search-container">
+          <input
+            type="text"
+            id="searchInput"
+            name="q"
+            placeholder="Enter streamer name or wallet address"
+            hx-get="/api/search"
+            hx-trigger="keyup changed delay:500ms, search"
+            hx-target="#searchResults"
+            hx-indicator="#spinner"
+          />
+          <button
+            id="searchButton"
+            hx-get="/api/search"
+            hx-trigger="click"
+            hx-target="#searchResults"
+            hx-include="#searchInput"
+          >
+            Search
+          </button>
+        </div>
+        <div id="spinner" class="htmx-indicator">Searching...</div>
+        <ul id="searchResults"></ul>
+      </div>
+      <div class="card">
+        <h2>New to Streamor?</h2>
+        <p>
+          <a href="/signup" class="button"> Sign Up Now </a>
+        </p>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
