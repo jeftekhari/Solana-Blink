@@ -7,7 +7,7 @@ export const signupPage = () => {
         <title>Sign Up - Streamor</title>
         <link rel="stylesheet" href="/css/default.css" />
         <link rel="stylesheet" href="/css/donatePage.css" />
-        <link rel="stylesheet" href="/css/signup.css" />
+        <link rel="stylesheet" href="/css/signUp.css" />
       </head>
       <body>
         <div class="signup-container">
