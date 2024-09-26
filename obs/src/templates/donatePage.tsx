@@ -30,6 +30,7 @@ export const tags = (user: Creator) => {
       <body>
         <div class="container">
           <header>
+            <button class="edit-button">Edit</button>
             <img src={`/img/${user.icon}`} alt={`${user.name}'s avatar`} />
             <h1>{user.name}</h1>
             <p>{user.description}</p>

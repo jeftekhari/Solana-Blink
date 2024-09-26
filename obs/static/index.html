@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Streamor</title>
+    <title>Tipto</title>
     <link type="text/css" rel="stylesheet" href="/css/default.css" />
     <link rel="stylesheet" href="/css/donatePage.css" />
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
@@ -16,15 +16,15 @@
         flex-grow: 1;
         padding: 0.5rem;
         font-size: 1rem;
-        border: 2px solid #00ff00;
-        background-color: #1e1e1e;
-        color: #00ff00;
+        border: 2px solid #8b4513;
+        background-color: #f0e6d2;
+        color: #5a3d1c;
+        font-family: "Courier New", Courier, monospace;
       }
       #searchButton {
         padding: 0.5rem 1rem;
         font-size: 1rem;
-        background-color: #00ff00;
-        color: #000000;
+        background-color: #8b4513;
         border: none;
         cursor: pointer;
       }
@@ -38,8 +38,9 @@
     </style>
   </head>
   <body>
+    <div id="navbar-container"></div>
     <div class="container">
-      <h1>Streamor Home Page</h1>
+      <h1>Tipto Home Page</h1>
       <div class="card">
         <h2>Search for a Streamer!</h2>
         <div class="search-container">
@@ -67,11 +68,19 @@
         <ul id="searchResults"></ul>
       </div>
       <div class="card">
-        <h2>New to Streamor?</h2>
+        <h2>New to Tipto?</h2>
         <p>
           <a href="/signup" class="button"> Sign Up Now </a>
         </p>
       </div>
     </div>
+    <script>
+      // Fetch and insert the navbar
+      fetch('/navbar')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('navbar-container').innerHTML = html;
+        });
+    </script>
   </body>
 </html>

@@ -1,3 +1,8 @@
+body {
+  background-color: #f0e6d2;
+  color: #333;
+}
+
 .signup-container {
   display: flex;
   justify-content: center;
@@ -10,10 +15,10 @@
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  background-color: #1e1e1e;
-  border: 2px solid #00ff00;
+  background-color: #d9c8a9;
+  border: 2px solid #8b4513;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+  box-shadow: 3px 3px 0 #8b4513;
 }
 
 .form-group {
@@ -23,7 +28,7 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #00ff00;
+  color: #5a3d1c;
   font-weight: bold;
 }
 
@@ -31,17 +36,17 @@
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  background-color: #2a2a2a;
-  border: 1px solid #00ff00;
+  background-color: #f0e6d2;
+  border: 1px solid #8b4513;
   border-radius: 5px;
-  color: #00ff00;
+  color: #333;
   font-family: "Courier New", Courier, monospace;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+  box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
 }
 
 .button {
@@ -50,11 +55,65 @@
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+  background-color: #8b4513;
+  color: #f0e6d2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #a0522d;
 }
 
 h1 {
   text-align: center;
   margin-bottom: 1.5rem;
-  color: #00ff00;
-  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+  color: #8b4513;
+}
+
+.login-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #f0e6d2;
+  transition: background-color 0.3s ease;
+}
+
+.gmail-button {
+  background-color: #4285F4;
+  font-family: 'Roboto', sans-serif;
+}
+
+.gmail-button:hover {
+  background-color: #357ae8;
+}
+
+.twitch-button {
+  background-color: #6441A4;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.twitch-button:hover {
+  background-color: #7d5bbe;
+}
+
+.gmail-button img,
+.twitch-button img {
+  margin-right: 10px;
+}
+
+.oauth-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
 }

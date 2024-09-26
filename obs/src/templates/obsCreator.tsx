@@ -11,7 +11,7 @@ export const creatorPage = (user: Creator) => {
         crossorigin="anonymous"
       ></link>
       <body>
-        {/* <h1>Streamor OBS Source</h1> */}
+        {/* <h1>Tipto OBS Source</h1> */}
 
         <div id="obsNotification">
           <h2 id="display"></h2>

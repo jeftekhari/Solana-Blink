@@ -26,6 +26,10 @@ import { signupPage } from "./templates/signUp";
 import { addCreator } from "./constants";
 import type { Creator } from "./types";
 import { creators } from "./constants";
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as TwitchStrategy } from 'passport-twitch';
+import { Navbar } from './components/navbar';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -250,13 +254,17 @@ app.listen(port, () =>
   ),
 );
 
-app.get("/signup", (_, res) => {
+app.get('/navbar', (req, res) => {
+  res.send(Navbar());
+});
+
+app.get("/signUp", (_, res) => {
   res.setHeader("Content-Type", "text/html");
   res.type(".html");
   res.send(`${signupPage()}`);
 });
 
-app.post("/signup", express.json(), (req, res) => {
+app.post("/signUp", express.json(), (req, res) => {
   const { name, twitter, icon, description, walletAddress } = req.body;
 
   if (!name || !twitter || !icon || !description || !walletAddress) {
@@ -303,4 +311,44 @@ app.get("/search", (req, res) => {
     .join("");
 
   res.send(html);
+});
+
+// Configure Google OAuth
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID || '',
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+  callbackURL: "/auth/google/callback"
+}, (accessToken, refreshToken, profile, done) => {
+  // Handle user profile here
+  done(null, profile);
+}));
+
+// Configure Twitch OAuth
+passport.use(new TwitchStrategy({
+  clientID: process.env.TWITCH_CLIENT_ID,
+  clientSecret: process.env.TWITCH_CLIENT_SECRET,
+  callbackURL: "/auth/twitch/callback"
+}, (accessToken: string, refreshToken: string, profile: any, done: (error: any, user?: any) => void) => {
+  // Handle user profile here
+  done(null, profile);
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+
+// Google OAuth routes
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signup' }), (req, res) => {
+  res.redirect('/');
+});
+
+// Twitch OAuth routes
+app.get('/auth/twitch', passport.authenticate('twitch', { scope: ['user_read'] }));
+app.get('/auth/twitch/callback', passport.authenticate('twitch', { failureRedirect: '/signup' }), (req, res) => {
+  res.redirect('/');
+});
+
+// Email login route (for demonstration purposes, you would need to implement this)
+app.get('/auth/email', (req, res) => {
+  res.send('Email login not implemented yet');
 });
